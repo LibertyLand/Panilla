@@ -47,22 +47,15 @@ public class BukkitEnchantments implements IEnchantments {
 
     private Enchantment getBukkitEnchantment(EnchantmentCompat enchCompat) {
         Enchantment bukkitEnchantment = null;
-        if (is_legacy) {
-            bukkitEnchantment = Enchantment.getByName(enchCompat.legacyName);
-        } else {
-            try {
-                Method getByKey = Enchantment.class.getDeclaredMethod("getByKey", NamespacedKey.class);
-                bukkitEnchantment = (Enchantment) getByKey.invoke(null,
-                        new NamespacedKey(enchCompat.namedKey.split(":")[0],
-                                enchCompat.namedKey.split(":")[1]));
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            }
+        try {
+            Method getByKey = Enchantment.class.getDeclaredMethod("getByKey", NamespacedKey.class);
+            bukkitEnchantment = (Enchantment) getByKey.invoke(null,
+                    new NamespacedKey(enchCompat.namedKey.split(":")[0],
+                            enchCompat.namedKey.split(":")[1]));
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
+
         return bukkitEnchantment;
     }
 
